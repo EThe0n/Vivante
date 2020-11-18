@@ -1,9 +1,12 @@
 #include <cstdio>
 #include <cstdlib>
 #include <algorithm>
+#include <chrono>
 #include <opencv2/opencv.hpp>
 
 #include "simple_sobel.h"
+#include "CLContext.h"
+#include "Timer.h"
 
 using namespace cv;
 
@@ -16,12 +19,12 @@ constexpr int KEY_4		 = 52;
 constexpr int KEY_9		 = 57;
 constexpr int KEY_MINUS  = 45;
 
-constexpr const char* FILTER_OPENCL_STR = "OpenCL";
+constexpr const char* FILTER_CPU_STR = "CPU";
 constexpr const char* FILTER_OPENCV_STR = "OpenCV";
-constexpr const char* FILTER_CPU_STR	= "CPU";
+constexpr const char* FILTER_OPENCL_STR = "OpenCL";
 
 float gFontSize_ = 1.0f;
-bool gIsVideoLoop = false;
+bool gIsLooping = false;
 
 enum class FilterContext : int
 {
@@ -31,27 +34,24 @@ enum class FilterContext : int
 	OpenCL_Sobel
 };
 
-bool readFrame(VideoCapture& videoStream, UMat& frame_BGR)
+bool readFrame(VideoCapture& videoStream, UMat& frame)
 {
-	videoStream >> frame_BGR;
+	videoStream >> frame;
 
-	if (frame_BGR.empty()) {
+	if (frame.empty()) {
 		return false;
 	}
 
 	return true;
 }
 
-void opencl_sobel(UMat& frame)
-{
-	
-}
-
-void opencv_sobel(UMat& frame)
+void opencv_sobel(UMat& frame, Timer& timer)
 {
 	UMat grad_x, grad_y;
 	UMat abs_grad_x, abs_grad_y;
 	
+	std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
+
 	/// Gradient X
 	cv::Sobel(frame, grad_x, CV_16S, 1, 0);
 	cv::convertScaleAbs(grad_x, abs_grad_x);
@@ -62,24 +62,40 @@ void opencv_sobel(UMat& frame)
 
 	// Total Gradient (approximate)
 	cv::addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, frame);
+
+	std::chrono::duration<double> elapsedTime_sec = std::chrono::system_clock::now() - start;
+	timer.update(elapsedTime_sec.count() * 1000.0);
 }
 
-void simple_sobel(UMat& frame, int width, int height)
+void simple_sobel(UMat& frame, int width, int height, Timer& timer)
 {
 	cv::Mat src(height, width, CV_8UC1);
 	cv::Mat dst(height, width, CV_8UC1);
 
 	frame.copyTo(src);
 
+	std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
+
 	sobel_operator(src.data, dst.data, width, height);
+
+	std::chrono::duration<double> elapsedTime_sec = std::chrono::system_clock::now() - start;
+	timer.update(elapsedTime_sec.count() * 1000.0);
 
 	dst.copyTo(frame);
 }
 
-void printLog(UMat& frame)
+void printLog(UMat& frame, const FilterContext& filterContext, Timer& timer)
 {
+	static FilterContext prevFilter = FilterContext::None;
+	const char* filterName[] = { "NONE", FILTER_CPU_STR, FILTER_OPENCV_STR, FILTER_OPENCL_STR };
+	char buffer[128] = "";
+
+	sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Now: %.2lf", filterName[(int)prevFilter], timer.minTime_ms, timer.maxTime_ms, timer.currentTime_ms);
+
 	int relativeYPos = (int)(30.0 * gFontSize_);
-	putText(frame, "Hello world!", Point(10, relativeYPos), cv::FONT_HERSHEY_SIMPLEX, gFontSize_, Scalar(255, 255, 255), 2);
+	putText(frame, buffer, Point(10, relativeYPos), cv::FONT_HERSHEY_SIMPLEX, gFontSize_, Scalar(255, 255, 255), 2);
+
+	prevFilter = filterContext;
 }
 
 int main(int argc, char* argv[])
@@ -103,11 +119,22 @@ int main(int argc, char* argv[])
 	int videoWidth_ = (int)videoStream.get(cv::CAP_PROP_FRAME_WIDTH);
 	int videoHeight_ = (int)videoStream.get(cv::CAP_PROP_FRAME_HEIGHT);
 
+	CLContext* clContext = nullptr;
+	try {
+		clContext = new CLContext(videoWidth_, videoHeight_);
+	}
+	catch (const std::exception& e) {
+		fprintf(stderr, "%s \n", e.what());
+		exit(EXIT_FAILURE);
+	}
+
 	UMat frame;
 	FilterContext filterContext = FilterContext::None;
+	Timer timer;
 	while (true) {
 		if (readFrame(videoStream, frame) == false) {
-			if (gIsVideoLoop) {
+			if (gIsLooping) {
+				timer.reset();
 				videoStream.set(CAP_PROP_POS_MSEC, 0.0);
 				continue;
 			}
@@ -118,14 +145,19 @@ int main(int argc, char* argv[])
 
 		// do edge detection
 		switch ((int)filterContext) {
-		case (int)FilterContext::Simple_Sobel:	simple_sobel(frame, videoWidth_, videoHeight_); break;
-		case (int)FilterContext::OpenCV_Sobel:	opencv_sobel(frame); break;
-		case (int)FilterContext::OpenCL_Sobel:	opencl_sobel(frame); break;
+		case (int)FilterContext::Simple_Sobel:	
+			simple_sobel(frame, videoWidth_, videoHeight_, timer);
+			break;
+		case (int)FilterContext::OpenCV_Sobel:	
+			opencv_sobel(frame, timer); 
+			break;
+		case (int)FilterContext::OpenCL_Sobel:	
+			clContext->sobel(frame, timer);
+			break;
 		}
-
-		printLog(frame);
-
-		imshow("Video player", frame);
+		
+		printLog(frame, filterContext, timer);
+		cv::imshow("Video player", frame);
 
 		int keyCode = waitKey(refreshTime_ms);
 		if (keyCode == KEY_ESCAPE) {
@@ -143,12 +175,13 @@ int main(int argc, char* argv[])
 		case KEY_9: gFontSize_ = std::max(0.0f, gFontSize_ - 0.25f);  break;
 
 		case KEY_MINUS: 
-			gIsVideoLoop = !gIsVideoLoop;		
-			printf("Video Loop : %s \n", gIsVideoLoop ? "TRUE" : "FALSE");
+			gIsLooping = !gIsLooping;
+			printf("Video Loop : %s \n", gIsLooping ? "TRUE" : "FALSE");
 			break;
 		}
 	}
 
+	delete clContext;
 	destroyAllWindows();
 
 	return 0;

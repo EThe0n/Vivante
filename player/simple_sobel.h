@@ -1,5 +1,4 @@
-#ifndef MY_HEADER_H
-#define MY_HEADER_H
+#pragma once 
 
 #include <stdlib.h>
 #include <cmath>
@@ -121,5 +120,3 @@ inline void double_threshold_operator(pixel* p, int width, int height)
         }
     }
 }
-
-#endif

@@ -11,20 +11,20 @@ kernel void sobel(__read_only image2d_t src, __write_only image2d_t dst)
         return;
     }
 
-    uint4 p00 = read_imageui(src, smplr, (int2)(x - 1, y - 1));
-    uint4 p10 = read_imageui(src, smplr, (int2)(x    , y - 1));
-    uint4 p20 = read_imageui(src, smplr, (int2)(x + 1, y - 1));
+    uint4 p00 = read_imageui(src, sampler, (int2)(coord.x - 1, coord.y - 1));
+    uint4 p10 = read_imageui(src, sampler, (int2)(coord.x    , coord.y - 1));
+    uint4 p20 = read_imageui(src, sampler, (int2)(coord.x + 1, coord.y - 1));
     
-    uint4 p01 = read_imageui(src, smplr, (int2)(x - 1, y));
-    uint4 p21 = read_imageui(src, smplr, (int2)(x + 1, y));
+    uint4 p01 = read_imageui(src, sampler, (int2)(coord.x - 1, coord.y));
+    uint4 p21 = read_imageui(src, sampler, (int2)(coord.x + 1, coord.y));
     
-    uint4 p02 = read_imageui(src, smplr, (int2)(x - 1, y + 1));
-    uint4 p12 = read_imageui(src, smplr, (int2)(x    , y + 1));
-    uint4 p22 = read_imageui(src, smplr, (int2)(x + 1, y + 1));    
+    uint4 p02 = read_imageui(src, sampler, (int2)(coord.x - 1, coord.y + 1));
+    uint4 p12 = read_imageui(src, sampler, (int2)(coord.x    , coord.y + 1));
+    uint4 p22 = read_imageui(src, sampler, (int2)(coord.x + 1, coord.y + 1));    
 
     int gx = -p00.x + p20.x + ((p21.x - p01.x) << 1) - p02.x + p22.x; 
     int gy = -p00.x - p20.x + ((p12.x - p10.x) << 1) + p02.x + p22.x; 
 
     uint gradient = abs(gx) + abs(gy);
-    write_imageui(dst, coord, (uint4)(max(min(gradient, 255), 0), 0, 0, 255));
+    write_imageui(dst, coord, (uint4)(max(min(gradient, (uint)255), (uint)0), 0, 0, 255));
 }
