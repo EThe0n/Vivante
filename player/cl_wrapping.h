@@ -83,10 +83,6 @@ namespace cl
 		CASE_RETURN_STRING(CL_INVALID_COMPILER_OPTIONS)
 		CASE_RETURN_STRING(CL_INVALID_LINKER_OPTIONS)
 		CASE_RETURN_STRING(CL_INVALID_DEVICE_PARTITION_COUNT)
-		CASE_RETURN_STRING(CL_INVALID_PIPE_SIZE)
-		CASE_RETURN_STRING(CL_INVALID_DEVICE_QUEUE)
-		CASE_RETURN_STRING(CL_INVALID_SPEC_ID)
-		CASE_RETURN_STRING(CL_MAX_SIZE_RESTRICTION_EXCEEDED)
 		}
 
 		return "";
@@ -126,14 +122,14 @@ namespace cl
 		return context;
 	}
 
-	cl_command_queue createCommandQueueWithProperties(cl_context context, cl_device_id device, const cl_queue_properties* properties)
-	{
-		cl_int errCode = CL_SUCCESS;
-		cl_command_queue commandQueue = clCreateCommandQueueWithProperties(context, device, properties, &errCode);
-		THROW_ERROR_EXCEPTION(errCode)
+	// cl_command_queue createCommandQueueWithProperties(cl_context context, cl_device_id device, const cl_queue_properties* properties)
+	// {
+	// 	cl_int errCode = CL_SUCCESS;
+	// 	cl_command_queue commandQueue = clCreateCommandQueueWithProperties(context, device, properties, &errCode);
+	// 	THROW_ERROR_EXCEPTION(errCode)
 
-		return commandQueue;
-	}
+	// 	return commandQueue;
+	// }
 
 	cl_program createProgramWithSource(cl_context context, cl_uint count, const char** strings, const size_t* lengths)
 	{
