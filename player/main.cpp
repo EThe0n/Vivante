@@ -127,20 +127,24 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "%s \n", e.what());
 		exit(EXIT_FAILURE);
 	}
+	printf("Context setup finished. \n");
 
 	UMat frame;
 	FilterContext filterContext = FilterContext::None;
 	Timer timer;
+	int frameCounter = 0;
 	while (true) {
 		if (readFrame(videoStream, frame) == false) {
 			if (gIsLooping) {
+				frameCounter = 0;
 				timer.reset();
 				videoStream.set(CAP_PROP_POS_MSEC, 0.0);
 				continue;
 			}
 			break;
 		}
-
+		printf("Read Frame %d \n", frameCounter++);
+		
 		cvtColor(frame, frame, COLOR_BGR2GRAY);
 
 		// do edge detection
