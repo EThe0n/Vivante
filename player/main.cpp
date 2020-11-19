@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
 		clContext = new CLContext(videoWidth_, videoHeight_);
 	}
 	catch (const std::exception& e) {
-		fprintf(stderr, "%s \n", e.what());
+		fprintf(stderr, "Error(OpenCL Setup) : %s \n", e.what());
 		exit(EXIT_FAILURE);
 	}
 	printf("OpenCL Context setup finished. \n");
