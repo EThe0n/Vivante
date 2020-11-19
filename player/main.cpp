@@ -145,7 +145,10 @@ int main(int argc, char* argv[])
 			}
 			break;
 		}
-		cvtColor(frame, frame, COLOR_BGR2GRAY);
+
+		if (filterContext != FilterContext::None) {
+			cvtColor(frame, frame, COLOR_BGR2GRAY);
+		}
 
 		// do edge detection
 		switch ((int)filterContext) {
