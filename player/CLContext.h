@@ -34,7 +34,7 @@ public:
 			cl::getKernelWorkGroupInfo(sobelKernel_, device_, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE, sizeof(size_t), &preferredWorkgroupSize);
 		}
 		catch (const std::exception& e) {
-			throw std::exception(e.what());
+			throw std::runtime_error(e.what());
 		}
 	}
 
@@ -74,7 +74,7 @@ public:
 			src.copyTo(frame);
 		}
 		catch (const std::exception& e) {
-			throw std::exception(e.what());
+			throw std::runtime_error(e.what());
 		}
 	}
 
@@ -87,12 +87,12 @@ private:
 		try {
 			cl::getPlatformIDs(0, nullptr, &numPlatforms);
 			if (numPlatforms < 1) {
-				throw std::exception("There is no OpenCL platform.");
+				throw std::runtime_error("There is no OpenCL platform.");
 			}
 			cl::getPlatformIDs(1, &platform, nullptr);
 		}
 		catch (const std::exception& e) {
-			throw std::exception(e.what());
+			throw std::runtime_error(e.what());
 		}
 
 		return platform;
@@ -106,12 +106,12 @@ private:
 		try {
 			cl::getDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 0, nullptr, &numDevices);
 			if (numDevices < 1) {
-				throw std::exception("There is no OpenCL device.");
+				throw std::runtime_error("There is no OpenCL device.");
 			}
 			cl::getDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &device, nullptr);
 		}
 		catch (const std::exception& e) {
-			throw std::exception(e.what());
+			throw std::runtime_error(e.what());
 		}
 
 		return device;
@@ -125,7 +125,7 @@ private:
 			std::stringstream ss;
 			ss << "Can not open " << fileName;
 
-			throw std::exception(ss.str().c_str());
+			throw std::runtime_error(ss.str().c_str());
 		}
 
 		size_t fileSize = srcFile.tellg();
@@ -149,7 +149,7 @@ private:
 			cl::buildProgram(program, 1, &device_, nullptr, nullptr, nullptr);
 		}
 		catch (const std::exception& e) {
-			throw std::exception(e.what());
+			throw std::runtime_error(e.what());
 		}
 
 		return program;
@@ -163,7 +163,7 @@ private:
 			cl::setKernelArg(sobelKernel_, 1, sizeof(cl_mem), &outputImage_);
 		}
 		catch (const std::exception& e) {
-			throw std::exception(e.what());
+			throw std::runtime_error(e.what());
 		}
 	}
 
@@ -189,7 +189,7 @@ private:
 			outputImage_ = cl::createImage(context_, CL_MEM_WRITE_ONLY, &format, &image_desc, nullptr);
 		}
 		catch (const std::exception& e) {
-			throw std::exception(e.what());
+			throw std::runtime_error(e.what());
 		}
 	}
 

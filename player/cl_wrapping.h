@@ -15,9 +15,9 @@ namespace cl
 	// 디버그 시에만 버그가 출력되고 릴리즈 모드일 때는 버그가 출력되지 않도록 한다.
 	#define THROW_ERROR_EXCEPTION(x) if (x != CL_SUCCESS) {\
 									std::string errLog = getErrorLog(__FUNCTION__, errCode);\
-									throw std::exception(errLog.c_str());}
+									throw std::runtime_error(errLog.c_str());}
 #else 
-#define THROW_ERROR_EXCEPTION(x) if (x != CL_SUCCESS) {throw std::exception("");}
+#define THROW_ERROR_EXCEPTION(x) if (x != CL_SUCCESS) {throw std::runtime_error("");}
 #endif
 
 	std::string errorCodeToString(cl_int errCode)
