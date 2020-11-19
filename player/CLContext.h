@@ -23,26 +23,15 @@ public:
 			platform = findPlatform();
 			device_ = findDevice(platform);
 			context_ = cl::createContext(nullptr, 1, &device_, nullptr, nullptr);
-
-			printf("find platform, device, context \n");
-
 			//cl_command_queue_properties commandQueueProperties[] = { CL_QUEUE_PROPERTIES, CL_QUEUE_PROFILING_ENABLE, 0 };
 			//commandQueue_ = cl::createCommandQueueWithProperties(context_, device_, commandQueueProperties);
 			commandQueue_ = clCreateCommandQueue(context_, device_, CL_QUEUE_PROFILING_ENABLE, NULL);
 
-			printf("setup command queue \n");
-
 			sobelProgram_ = initProgram("Sobel.cl");
-			printf("cl program setup complete \n");
 
 			initImageBuffer();
-			printf("cl image buffer setup complete \n");
-
 			initKernel();
-			printf("cl kernel setup complete \n");
 			cl::getKernelWorkGroupInfo(sobelKernel_, device_, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE, sizeof(size_t), &preferredWorkgroupSize);
-
-			printf("get kernel work group information complete \n");
 		}
 		catch (const std::exception& e) {
 			throw std::runtime_error(e.what());

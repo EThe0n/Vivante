@@ -145,8 +145,6 @@ int main(int argc, char* argv[])
 			}
 			break;
 		}
-		printf("Read Frame %d \n", frameCounter++);
-
 		cvtColor(frame, frame, COLOR_BGR2GRAY);
 
 		// do edge detection
