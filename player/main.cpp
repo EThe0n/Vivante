@@ -90,7 +90,7 @@ void printLog(UMat& frame, const FilterContext& filterContext, Timer& timer)
 	const char* filterName[] = { "NONE", FILTER_CPU_STR, FILTER_OPENCV_STR, FILTER_OPENCL_STR };
 	char buffer[128] = "";
 
-	sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Now: %.2lf", filterName[(int)prevFilter], timer.minTime_ms, timer.maxTime_ms, timer.currentTime_ms);
+	sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Now: %.2lf (ms/frame)", filterName[(int)prevFilter], timer.minTime_ms, timer.maxTime_ms, timer.currentTime_ms);
 
 	int relativeYPos = (int)(30.0 * gFontSize_);
 	putText(frame, buffer, Point(10, relativeYPos), cv::FONT_HERSHEY_SIMPLEX, gFontSize_, Scalar(255, 255, 255), 2);
