@@ -111,13 +111,12 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	printf("Press (1/2/3/4) to switch between filters \n");
-	printf("1: None, 2:CPU, 3:OpenCV, 4:OpenCL \n");
-
 	const double videoFPS = videoStream.get(cv::CAP_PROP_FPS);
 	const double refreshTime_ms = 1000.0 / videoFPS;
 	int videoWidth_ = (int)videoStream.get(cv::CAP_PROP_FRAME_WIDTH);
 	int videoHeight_ = (int)videoStream.get(cv::CAP_PROP_FRAME_HEIGHT);
+
+	printf("Get video information successfully. \n");
 
 	CLContext* clContext = nullptr;
 	try {
@@ -127,7 +126,10 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "%s \n", e.what());
 		exit(EXIT_FAILURE);
 	}
-	printf("Context setup finished. \n");
+	printf("OpenCL Context setup finished. \n");
+
+	printf("Press (1/2/3/4) to switch between filters \n");
+	printf("1: None, 2:CPU, 3:OpenCV, 4:OpenCL \n");
 
 	UMat frame;
 	FilterContext filterContext = FilterContext::None;
@@ -144,7 +146,7 @@ int main(int argc, char* argv[])
 			break;
 		}
 		printf("Read Frame %d \n", frameCounter++);
-		
+
 		cvtColor(frame, frame, COLOR_BGR2GRAY);
 
 		// do edge detection
