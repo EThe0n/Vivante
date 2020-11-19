@@ -152,7 +152,7 @@ namespace cl
 			program = createProgramWithSource(context, 1, &source, sourceLen);
 		}
 		catch (const std::exception& ex) {
-			throw std::exception(ex.what());
+			throw std::runtime_error(ex.what());
 		}
 
 		return program;
@@ -215,7 +215,7 @@ namespace cl
 
 				ss << "Device " << i << '\n' << log << "\n\n";
 			}
-			throw std::exception(ss.str().c_str());
+			throw std::runtime_error(ss.str().c_str());
 			break;
 		default:
 			THROW_ERROR_EXCEPTION(errCode)
