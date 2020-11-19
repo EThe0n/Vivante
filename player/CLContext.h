@@ -26,8 +26,9 @@ public:
 
 			printf("find platform, device, context \n");
 
-			cl_command_queue_properties commandQueueProperties[] = { CL_QUEUE_PROPERTIES, CL_QUEUE_PROFILING_ENABLE, 0 };
-			commandQueue_ = cl::createCommandQueueWithProperties(context_, device_, commandQueueProperties);
+			//cl_command_queue_properties commandQueueProperties[] = { CL_QUEUE_PROPERTIES, CL_QUEUE_PROFILING_ENABLE, 0 };
+			//commandQueue_ = cl::createCommandQueueWithProperties(context_, device_, commandQueueProperties);
+			commandQueue_ = clCreateCommandQueue(context_, device_, CL_QUEUE_PROFILING_ENABLE, NULL);
 
 			printf("setup command queue \n");
 
