@@ -87,7 +87,7 @@ void simple_sobel(UMat& frame, int width, int height, Timer& timer)
 void printLog(UMat& frame, const FilterContext& filterContext, Timer timer[])
 {
 	static FilterContext prevFilter = FilterContext::None;
-	const char* filterName[] = { "NONE", FILTER_CPU_STR, FILTER_OPENCV_STR, FILTER_OPENCL_STR };
+	const char* filterName[] = { FILTER_CPU_STR, FILTER_OPENCV_STR, FILTER_OPENCL_STR };
 	char buffer[128] = "";
 
 	if (prevFilter == FilterContext::None) {
@@ -136,7 +136,8 @@ int main(int argc, char* argv[])
 
 	printf("Press (1/2/3/4) to switch between filters \n");
 	printf("1: None, 2:CPU, 3:OpenCV, 4:OpenCL \n");
-
+	printf("Press (9/0) to make font smaller/larger \n");
+	printf("Press (-) to loop/unloop video \n");
 	UMat frame;
 	FilterContext filterContext = FilterContext::None;
 	Timer timer[3];
