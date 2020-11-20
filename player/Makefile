@@ -4,7 +4,7 @@ TARGET = player
 OBJECTS = main.o
 LIBS = $$(pkg-config opencv4 --libs --cflags) -lOpenCL
 
-all : $(TARGET)
+all : 
 	$(CC) $(CFLAGS) -o $(TARGET) main.cpp -I. $(LIBS)
 
 clean:
