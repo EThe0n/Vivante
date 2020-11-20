@@ -94,7 +94,8 @@ void printLog(UMat& frame, const FilterContext& filterContext, Timer timer[])
 		sprintf(buffer, "[NONE]");
 	}
 	else {
-		sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Now: %.2lf (ms/frame)", filterName[(int)prevFilter], timer.minTime_ms, timer.maxTime_ms, timer.currentTime_ms);
+		int index = (int)prevFilter;
+		sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Now: %.2lf (ms/frame)", filterName[index], timer[index].minTime_ms, timer[index].maxTime_ms, timer[index].currentTime_ms);
 	}
 
 	int relativeYPos = (int)(30.0 * gFontSize_);
@@ -144,8 +145,8 @@ int main(int argc, char* argv[])
 		if (readFrame(videoStream, frame) == false) {
 			if (gIsLooping) {
 				frameCounter = 0;
-				for (int i = 0; i < 4; ++i) {
-					timer.reset();
+				for (int i = 0; i < 3; ++i) {
+					timer[i].reset();
 				}
 				videoStream.set(CAP_PROP_POS_MSEC, 0.0);
 				continue;
