@@ -19,7 +19,7 @@ constexpr int KEY_4		 = 52;
 constexpr int KEY_9		 = 57;
 constexpr int KEY_MINUS  = 45;
 
-constexpr const char* FILTER_CPU_STR = "CPU";
+constexpr const char* FILTER_CPU_STR 	= "CPU";
 constexpr const char* FILTER_OPENCV_STR = "OpenCV";
 constexpr const char* FILTER_OPENCL_STR = "OpenCL";
 
@@ -28,7 +28,7 @@ bool gIsLooping = false;
 
 enum class FilterContext : int
 {
-	None, 	// Do not perform edge detection
+	None = -1, 	// Do not perform edge detection
 	Simple_Sobel,
 	OpenCV_Sobel,
 	OpenCL_Sobel
@@ -84,13 +84,18 @@ void simple_sobel(UMat& frame, int width, int height, Timer& timer)
 	dst.copyTo(frame);
 }
 
-void printLog(UMat& frame, const FilterContext& filterContext, Timer& timer)
+void printLog(UMat& frame, const FilterContext& filterContext, Timer timer[])
 {
 	static FilterContext prevFilter = FilterContext::None;
 	const char* filterName[] = { "NONE", FILTER_CPU_STR, FILTER_OPENCV_STR, FILTER_OPENCL_STR };
 	char buffer[128] = "";
 
-	sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Now: %.2lf (ms/frame)", filterName[(int)prevFilter], timer.minTime_ms, timer.maxTime_ms, timer.currentTime_ms);
+	if (prevFilter == FilterContext::None) {
+		sprintf(buffer, "[NONE]");
+	}
+	else {
+		sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Now: %.2lf (ms/frame)", filterName[(int)prevFilter], timer.minTime_ms, timer.maxTime_ms, timer.currentTime_ms);
+	}
 
 	int relativeYPos = (int)(30.0 * gFontSize_);
 	putText(frame, buffer, Point(10, relativeYPos), cv::FONT_HERSHEY_SIMPLEX, gFontSize_, Scalar(255, 255, 255), 2);
@@ -133,13 +138,15 @@ int main(int argc, char* argv[])
 
 	UMat frame;
 	FilterContext filterContext = FilterContext::None;
-	Timer timer;
+	Timer timer[3];
 	int frameCounter = 0;
 	while (true) {
 		if (readFrame(videoStream, frame) == false) {
 			if (gIsLooping) {
 				frameCounter = 0;
-				timer.reset();
+				for (int i = 0; i < 4; ++i) {
+					timer.reset();
+				}
 				videoStream.set(CAP_PROP_POS_MSEC, 0.0);
 				continue;
 			}
@@ -153,13 +160,13 @@ int main(int argc, char* argv[])
 		// do edge detection
 		switch ((int)filterContext) {
 		case (int)FilterContext::Simple_Sobel:	
-			simple_sobel(frame, videoWidth_, videoHeight_, timer);
+			simple_sobel(frame, videoWidth_, videoHeight_, timer[(int)FilterContext::Simple_Sobel]);
 			break;
 		case (int)FilterContext::OpenCV_Sobel:	
-			opencv_sobel(frame, timer); 
+			opencv_sobel(frame, timer[(int)FilterContext::OpenCV_Sobel]); 
 			break;
 		case (int)FilterContext::OpenCL_Sobel:	
-			clContext->sobel(frame, timer);
+			clContext->sobel(frame, timer[(int)FilterContext::OpenCL_Sobel]);
 			break;
 		}
 		
