@@ -31,7 +31,7 @@ struct Timer
 
 	double getAverageTime()
 	{
-		return totalTime_ms / counter;
+		return totalTime_ms / (double)counter;
 	}
 
 	double currentTime_ms;
