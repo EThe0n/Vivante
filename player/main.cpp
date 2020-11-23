@@ -95,7 +95,7 @@ void printLog(UMat& frame, const FilterContext& filterContext, Timer timer[])
 	}
 	else {
 		int index = (int)prevFilter;
-		sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Avg: %2.lf, Now: %.2lf  (ms/frame)", 
+		sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Avg: %.2lf, Now: %.2lf  (ms/frame)", 
 			filterName[index], timer[index].minTime_ms, timer[index].maxTime_ms, timer[index].getAverageTime(), timer[index].currentTime_ms);
 	}
 
