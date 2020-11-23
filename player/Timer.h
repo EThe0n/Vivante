@@ -23,9 +23,16 @@ struct Timer
 		currentTime_ms = newTime_ms;
 		maxTime_ms = std::max(newTime_ms, maxTime_ms);
 		minTime_ms = std::min(newTime_ms, minTime_ms);
+		totalTime_ms += newTime_ms;
+	}
+
+	double getAverageTime(int frameCount)
+	{
+		return totalTime_ms / frameCount;
 	}
 
 	double currentTime_ms;
 	double maxTime_ms;
 	double minTime_ms;
+	double totalTime_ms;
 };
