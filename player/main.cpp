@@ -142,11 +142,9 @@ int main(int argc, char* argv[])
 	UMat frame;
 	FilterContext filterContext = FilterContext::None;
 	Timer timer[3];
-	int frameCounter = 0;
 	while (true) {
 		if (readFrame(videoStream, frame) == false) {
 			if (gIsLooping) {
-				frameCounter = 0;
 				for (int i = 0; i < 3; ++i) {
 					timer[i].reset();
 				}
