@@ -71,6 +71,7 @@
   -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.4.0/modules .. 
 ```
 #### 주의: 결과에서 아래 그림과 같이 FFMPEG 지원을 반드시 확인하고 다음 단계로 넘어가야한다. 
+<img src="https://user-images.githubusercontent.com/14997644/100328431-dae4c300-300f-11eb-8f0c-964ffcd11bf0.png" width="40%"></img>
 
 ```
   time make -j$(nproc)
