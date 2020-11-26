@@ -104,7 +104,7 @@
 ```
 
 --------------------
-## 프로젝트 빌드
+### 프로젝트 빌드
 ```
   git clone https://github.com/EThe0n/Vivante.git
   cd Vivante/player
@@ -112,7 +112,7 @@
 ```
 
 --------------------
-## 프로젝트 실행
+### 프로젝트 실행
 ```
   ./player <video_file_path>
 ```
