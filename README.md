@@ -1,6 +1,22 @@
 # Vivante
   Video player on Vivante GPU
   
+  + 버튼 설명
+  
+    1: 필터 없음
+    
+    2: CPU 필터
+    
+    3: OpenCV 필터
+    
+    4: OpenCL 필터
+    
+    9: Log 크기 줄이기
+    
+    0: Log 크기 키우기
+    
+    -: 영상 반복 재생 On/Off
+    
 --------------------
 ## Prerequisite
 1. 필요 패키지 설치
