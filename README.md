@@ -23,7 +23,6 @@
 ```
   sudo apt-get install build-essential git unzip wget cmake libgtk2.0-dev pkg-config yasm 
   sudo apt-get install libjpeg-dev libtiff5-dev libpng-dev 
-  sudo apt-get install ffmpeg libavcodec-dev libavformat-dev libswscale-dev libxvidcore-dev libx264-dev libxine2-dev 
   sudo apt-get install libgtk-3-dev  
   sudo apt-get install mesa-utils libgl1-mesa-dri libgtkgl2.0-dev libgtkglext1-dev 
   sudo apt-get install libatals-base-dev gfortran libeigen3-dev 
@@ -48,6 +47,7 @@
 
 4. OpenCV 4.4 설치
 ```
+  sudo apt-get install ffmpeg libavcodec-dev libavformat-dev libswscale-dev libxvidcore-dev libx264-dev libxine2-dev 
   mkdir opencv
   cd opencv 
   wget –O opencv.zip https://github.com/opencv/opencv/archive/4.4.0.zip 
