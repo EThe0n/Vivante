@@ -96,8 +96,9 @@
 
 ```
   cat /etc/ld.so.conf.d/*
+  결과에 /usr/local/lib가 있는지 확인하고, 없다면 추가한다.
 ```
-결과에 /usr/local/lib가 있는지 확인하고, 없다면 추가한다.
+
 ```
   sudo ldconfig
 ```
