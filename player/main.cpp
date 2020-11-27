@@ -96,7 +96,7 @@ void printLog(UMat& frame, const FilterContext& filterContext, Timer timer[])
 	// else {
 	if (prevFilter != FilterContext::None) {
 		int index = (int)prevFilter;
-		sprintf(fps_buf, "%6s %4u FPS, AVG:%4u, MIN:%4u, MAX:%4u", 
+		sprintf(buffer, "%6s %4u FPS, AVG:%4u, MIN:%4u, MAX:%4u", 
 			filterName[index], timer[index].getCurrentFPS(), timer[index].getAvgFPS(), timer[index].getMinFPS(), timer[index].getMaxFPS());
 		// sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Avg: %.2lf, Now: %.2lf  (ms/frame)", 
 		// 	filterName[index], timer[index].minTime_ms, timer[index].maxTime_ms, timer[index].getAverageTime(), timer[index].currentTime_ms);
