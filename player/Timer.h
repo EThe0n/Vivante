@@ -22,7 +22,7 @@ struct Timer
 	void update(double newTime_ms)
 	{
 		++frameCounter;
-		currentFPS = 1.0 / newTime_ms;
+		currentFPS = 1000.0 / newTime_ms;
 		maxFPS = std::max(currentFPS, maxFPS);
 		minFPS = std::min(currentFPS, minFPS);
 		sumFPS += currentFPS;
