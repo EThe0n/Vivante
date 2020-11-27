@@ -34,6 +34,26 @@ struct Timer
 		return totalTime_ms / (double)counter;
 	}
 
+	double getMaxFPS()
+	{
+		return (double)counter / minTime_ms;
+	} 
+
+	double getMinFPS()
+	{
+		return (double)counter / maxTime_ms;
+	}
+
+	double getAvgFPS()
+	{
+		return (double)counter / getAverageTime();
+	}
+
+	double getCurrentFPS()
+	{
+		return (double)counter / currentTime_ms;
+	}
+
 	double currentTime_ms;
 	double maxTime_ms;
 	double minTime_ms;

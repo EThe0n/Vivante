@@ -90,13 +90,16 @@ void printLog(UMat& frame, const FilterContext& filterContext, Timer timer[])
 	const char* filterName[] = { FILTER_CPU_STR, FILTER_OPENCV_STR, FILTER_OPENCL_STR };
 	char buffer[128] = "";
 
-	if (prevFilter == FilterContext::None) {
-		sprintf(buffer, "[NONE]");
-	}
-	else {
+	// if (prevFilter == FilterContext::None) {
+	// 	sprintf(buffer, "[NONE]");
+	// }
+	// else {
+	if (prevFilter != FilterContext::None) {
 		int index = (int)prevFilter;
-		sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Avg: %.2lf, Now: %.2lf  (ms/frame)", 
-			filterName[index], timer[index].minTime_ms, timer[index].maxTime_ms, timer[index].getAverageTime(), timer[index].currentTime_ms);
+		sprintf(fps_buf, "%6s %4u FPS, AVG:%4u, MIN:%4u, MAX:%4u", 
+			filterName[index], timer[index].getCurrentFPS(), timer[index].getAvgFPS(), timer[index].getMinFPS(), timer[index].getMaxFPS());
+		// sprintf(buffer, "[%s] Min: %.2lf, Max: %.2lf, Avg: %.2lf, Now: %.2lf  (ms/frame)", 
+		// 	filterName[index], timer[index].minTime_ms, timer[index].maxTime_ms, timer[index].getAverageTime(), timer[index].currentTime_ms);
 	}
 
 	int relativeYPos = (int)(30.0 * gFontSize_);
