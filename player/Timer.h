@@ -21,22 +21,21 @@ struct Timer
 
 	void update(double newTime_ms)
 	{
-		double fps = 1.0 / newTime_ms;
 		++frameCounter;
-		currentFPS = (unsigned int)fps;
+		currentFPS = 1.0 / newTime_ms;
 		maxFPS = std::max(currentFPS, maxFPS);
 		minFPS = std::min(currentFPS, minFPS);
 		sumFPS += currentFPS;
 	}
 
-	unsigned int getAvgFPS()
+	double getAvgFPS()
 	{
 		return sumFPS / frameCounter;
 	}
 
-	unsigned int currentFPS;
-	unsigned int maxFPS;
-	unsigned int minFPS;
-	unsigned int sumFPS;
+	double currentFPS;
+	double maxFPS;
+	double minFPS;
+	double sumFPS;
 	int frameCounter;
 };
