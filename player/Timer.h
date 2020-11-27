@@ -12,30 +12,30 @@ struct Timer
 
 	void reset()
 	{
-		currentFPS   = 0.0;
-		maxFPS 		 = 0.0;
+		currentFPS   = 0;
+		maxFPS 		 = 0;
 		minFPS 		 = (double)UINT_MAX;
-		sumFPS 		 = 0.0;
+		sumFPS 		 = 0;
 		frameCounter = 0;
 	}
 
 	void update(double newTime_ms)
 	{
 		++frameCounter;
-		currentFPS = 1.0 / newTime_ms;
+		currentFPS = (unsigned int)(1.0 / newTime_ms);
 		maxFPS = std::max(currentFPS, maxFPS);
 		minFPS = std::min(currentFPS, minFPS);
 		sumFPS += currentFPS;
 	}
 
-	double getAvgFPS()
+	unsigned int getAvgFPS()
 	{
 		return sumFPS / frameCounter;
 	}
 
-	double currentFPS;
-	double maxFPS;
-	double minFPS;
-	double sumFPS;
+	unsigned int currentFPS;
+	unsigned int maxFPS;
+	unsigned int minFPS;
+	unsigned int sumFPS;
 	int frameCounter;
 };
